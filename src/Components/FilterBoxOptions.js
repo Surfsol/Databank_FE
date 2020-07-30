@@ -1,7 +1,7 @@
 export const FilterBoxOptions = {
   superCategories: [
     {
-      label: "Key Demographics",
+      label: "Demographics",
       options: [
         {
           label: "Age"
@@ -10,10 +10,10 @@ export const FilterBoxOptions = {
           label: "Border Crossing Frequency"
         },
         {
-          label: "Country of Residence"
+          label: "Border Location"
         },
         {
-          label: "Crossing Location"
+          label: "Country of Residence"
         },
         {
           label: "Education Level"
@@ -22,56 +22,56 @@ export const FilterBoxOptions = {
           label: "Gender"
         },
         {
-          label: "Language"
+          label: "Preferred Language"
         },
         {
-          label: "Primary Income"
+          label: "Cross Border Trade as Primary Income"
         },
         {
-          label: "Produce"
+          label: "Grow/Produce their Own Goods"
         }
       ]
     },
     {
-      label: "Information Demand",
+      label: "Trade Insights",
       options: [
         {
-          label: "Most Requested Agency Information for Procedures"
+          label: "Requested Agencies"
         },
         {
-          label: "Most Requested Document Information for Procedures"
+          label: "Requested Documents"
         },
         {
-          label: "Most Requested Procedure Commodities"
+          label: "Requested Procedures, by Commodity"
         },
         {
-          label: "Most Requested Procedure Commodity Categories"
+          label: "Requested Procedures, by Commodity Category"
         },
         {
-          label: "Requested Procedures for Destination (Imports to:)"
+          label: "Requested Procedures, by Destination"
         }
       ]
     },
     {
-      label: "Business Behaviour",
+      label: "Business Insights",
       options: [
         {
-          label: "Exchange Rate Direction"
+          label: "Currency Exchanges"
         },
         {
-          label: "Final Destination Country"
+          label: "Traders' Destination Country"
         },
         {
-          label: "Final Destination Market"
+          label: "Traders' Destination Market"
         },
         {
-          label: "Origin of Traders' Goods"
+          label: "Traded Commodities' Origin"
         },
         {
-          label: "Top Commodities"
+          label: "Traded Commodities"
         },
         {
-          label: "Top Commodity Categories"
+          label: "Traded Commodity Categories"
         }
       ]
     }
@@ -85,49 +85,51 @@ export const FilterBoxOptions = {
     "Border Crossing Frequency": {
       value: { type: "crossing_freq", query: "Users" }
     },
-    "Crossing Location": {
+    "Border Location": {
       value: { type: "crossing_location", query: "Users" }
     },
     Age: { value: { type: "age", query: "Users" } },
     "Country of Residence": {
       value: { type: "country_of_residence", query: "Users" }
     },
-    "Primary Income": {
+    "Cross Border Trade as Primary Income": {
       value: { type: "primary_income", query: "Users" }
     },
-    Language: { value: { type: "language", query: "Users" } },
-    Produce: { value: { type: "produce", query: "Users" } },
-    "Most Requested Procedure Commodities": {
+    "Preferred Language": { value: { type: "language", query: "Users" } },
+    "Grow/Produce their Own Goods": {
+      value: { type: "produce", query: "Users" }
+    },
+    "Requested Procedures, by Commodity": {
       value: { type: "procedurecommodity", query: "Sessions" }
     },
-    "Most Requested Procedure Commodity Categories": {
+    "Requested Procedures, by Commodity Category": {
       value: { type: "procedurecommoditycat", query: "Sessions" }
     },
-    "Requested Procedures for Destination (Imports to:)": {
+    "Requested Procedures, by Destination": {
       value: { type: "proceduredest", query: "Sessions" }
     },
-    "Most Requested Document Information for Procedures": {
+    "Requested Documents": {
       value: { type: "procedurerequireddocument", query: "Sessions" }
     },
-    "Most Requested Agency Information for Procedures": {
+    "Requested Agencies": {
       value: { type: "procedurerelevantagency", query: "Sessions" }
     },
-    "Origin of Traders' Goods": {
+    "Traded Commodities' Origin": {
       value: { type: "procedureorigin", query: "Sessions" }
     },
-    "Final Destination Country": {
+    "Traders' Destination Country": {
       value: { type: "commoditycountry", query: "Sessions" }
     },
-    "Final Destination Market": {
+    "Traders' Destination Market": {
       value: { type: "commoditymarket", query: "Sessions" }
     },
-    "Top Commodities": {
+    "Traded Commodities": {
       value: { type: "commodityproduct", query: "Sessions" }
     },
-    "Top Commodity Categories": {
+    "Traded Commodity Categories": {
       value: { type: "commoditycat", query: "Sessions" }
     },
-    "Exchange Rate Direction": {
+    "Currency Exchanges": {
       value: { type: "exchangedirection", query: "Sessions" }
     }
   },
@@ -139,7 +141,7 @@ export const FilterBoxOptions = {
       value: { type: "crossing_freq", query: "Users" }
     },
     {
-      label: "Crossing Location",
+      label: "Border Location",
       value: { type: "crossing_location", query: "Users" }
     },
     { label: "Age", value: { type: "age", query: "Users" } },
@@ -148,33 +150,38 @@ export const FilterBoxOptions = {
       value: { type: "country_of_residence", query: "Users" }
     },
     {
-      label: "Primary Income",
+      label: "Cross Border Trade as Primary Income",
       value: { type: "primary_income", query: "Users" }
     },
-    { label: "Language", value: { type: "language", query: "Users" } },
-    { label: "Produce", value: { type: "produce", query: "Users" } }
+    {
+      label: "Preferred Language",
+      value: { type: "language", query: "Users" }
+    },
+    {
+      label: "Grow/Produce their Own Goods",
+      value: { type: "produce", query: "Users" }
+    }
   ],
   tableNamesToCategoryName: {
     gender: "Gender",
     education: "Education Level",
     crossing_freq: "Border Crossing Frequency",
-    crossing_location: "Crossing Location",
+    crossing_location: "Border Location",
     age: "Age",
     country_of_residence: "Country of Residence",
-    primary_income: "Primary Income",
-    language: "Language",
-    produce: "Produce",
-    procedurecommodity: "Most Requested Procedure Commodities",
-    procedurecommoditycat: "Most Requested Procedure Commodity Categories",
-    proceduredest: "Requested Procedures for Destination (Imports to:)",
-    procedurerequireddocument:
-      "Most Requested Document Information for Procedures",
-    procedurerelevantagency: "Most Requested Agency Information for Procedures",
-    procedureorigin: "Origin of Traders' Goods",
-    commoditycountry: "Final Destination Country",
-    commoditymarket: "Final Destination Market",
-    commodityproduct: "Top Commodities",
-    commoditycat: "Top Commodity Categories",
-    exchangedirection: "Exchange Rate Direction"
+    primary_income: "Cross Border Trade as Primary Income",
+    language: "Preferred Language",
+    produce: "Grow/Produce their Own Goods",
+    procedurecommodity: "Requested Procedures, by Commodity",
+    procedurecommoditycat: "Requested Procedures, by Commodity Category",
+    proceduredest: "Requested Procedures, by Destination",
+    procedurerequireddocument: "Requested Documents",
+    procedurerelevantagency: "Requested Agencies",
+    procedureorigin: "Traded Commodities' Origin",
+    commoditycountry: "Traders' Destination Country",
+    commoditymarket: "Traders' Destination Market",
+    commodityproduct: "Traded Commodities",
+    commoditycat: "Traded Commodity Categories",
+    exchangedirection: "Currency Exchanges"
   }
 };

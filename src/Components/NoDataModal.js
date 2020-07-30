@@ -1,6 +1,8 @@
 import React from "react";
 import { ContentContainer } from "../dashboard/styledComponents/Index";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { queriesFilters } from "../Components/redux-actions/queriesAction";
 
 export const Div = styled.div`
   width: 500px;
@@ -29,33 +31,64 @@ const BigX = styled.big`
 `;
 
 function NoDataModal({ setNoDataModal, setFilters, filters }) {
+  const dispatch = useDispatch();
   function handleClose() {
+    //console.log('filters NoDataModal',filters)
+    dispatch(
+      queriesFilters({
+        filters: {
+          0: {
+            ...filters[0],
+            nameOfFilter: "Data Series",
+            selectableOptions: {}
+          },
+          1: {
+            nameOfFilter: "Compare SubSamples",
+            selectedCategory: "",
+            selectableOptions: {},
+            selectedTable: "Users",
+            selectedTableColumnName: "",
+            showOptions: false,
+            optionHasBeenSelected: false
+          },
+          2: {
+            nameOfFilter: "Data Filter",
+            selectedCategory: "",
+            selectableOptions: {},
+            selectedTable: "",
+            selectedTableColumnName: "",
+            showOptions: true,
+            optionHasBeenSelected: false
+          }
+        }
+      }),
+      setFilters({
+        0: {
+          ...filters[0],
+          nameOfFilter: "Data Series",
+          selectableOptions: {}
+        },
+        1: {
+          nameOfFilter: "Compare SubSamples",
+          selectedCategory: "",
+          selectableOptions: {},
+          selectedTable: "Users",
+          selectedTableColumnName: "",
+          showOptions: false,
+          optionHasBeenSelected: false
+        },
+        2: {
+          nameOfFilter: "Data Filter",
+          selectedCategory: "",
+          selectableOptions: {},
+          selectedTable: "",
+          selectedTableColumnName: "",
+          showOptions: true,
+          optionHasBeenSelected: false
+        }
+      })
+    );
     setNoDataModal(false);
-    setFilters({
-      0: {
-        ...filters[0],
-        nameOfFilter: "Data Series",
-        selectableOptions: {}
-      },
-      1: {
-        nameOfFilter: "Compare SubSamples",
-        selectedCategory: "",
-        selectableOptions: {},
-        selectedTable: "Users",
-        selectedTableColumnName: "",
-        showOptions: false,
-        optionHasBeenSelected: false
-      },
-      2: {
-        nameOfFilter: "Data Filter",
-        selectedCategory: "",
-        selectableOptions: {},
-        selectedTable: "",
-        selectedTableColumnName: "",
-        showOptions: true,
-        optionHasBeenSelected: false
-      }
-    });
   }
 
   return (

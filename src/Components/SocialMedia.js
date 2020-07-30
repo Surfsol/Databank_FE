@@ -23,7 +23,7 @@ import swal from "sweetalert";
 
 //need to bring in data, for 109
 const SocialMedia = () => {
-  const tier = useSelector(state => state.tierReducer.tier.tier);
+  const access = useSelector(state => state.tierReducer.access);
 
   const newSub = getSubscription();
   let sub;
@@ -47,7 +47,7 @@ const SocialMedia = () => {
     window.open(
       `https://twitter.com/intent/tweet?text=https://www.databank.sautiafrica.org/data${socialMediaLink}`,
       "",
-      "width=200,height=100"
+      "width=600,height=600"
     );
   }
 
@@ -55,7 +55,7 @@ const SocialMedia = () => {
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=https://www.databank.sautiafrica.org/data${socialMediaLink}&amp;src=sdkpreparse`,
       "",
-      "width=200,height=100"
+      "width=600,height=600"
     );
   }
 
@@ -71,10 +71,7 @@ const SocialMedia = () => {
   if (columnsRedux !== undefined) {
     return (
       <>
-        {tier === "ADMIN" ||
-        tier === "PAID" ||
-        tier === "GOV_ROLE" ||
-        newSub ? (
+        {access || newSub ? (
           <>
             <Grid item style={{ cursor: "pointer" }}>
               <CsvDownloader

@@ -56,7 +56,7 @@ const dataParse = (
         queryType,
         crossFilterQuery
       );
-    } else {
+    } else if (data) {
       //when single filtering with index that is not "Most Requested"
       // data = removeMultiple(data);
 

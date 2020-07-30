@@ -25,8 +25,6 @@ const Graph = props => {
     chartData
   } = props;
 
-  console.log("data", data, "filters", filters, "chartData", chartData);
-
   const dispatch = useDispatch();
 
   let dyText = "";

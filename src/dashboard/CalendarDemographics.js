@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { ContentContainer } from "../../dashboard/styledComponents/Index";
+import { ContentContainer } from "./styledComponents/Index";
 import styled from "styled-components";
 
 const LoginButton = styled.button`
@@ -59,46 +59,26 @@ const BigContinue = styled.big`
   color: black;
 `;
 
-function SeriesFilterModal({ handleClose }) {
+function CalendarDemographics(props) {
   const history = useHistory();
 
-  const handleSubmit = async (e, input) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    handleClose(false);
-    //if logged in push to account page
-    //if not logged in push you to signup
-    if (localStorage.getItem("token")) {
-      history.push("/myaccount");
-    } else {
-      history.push("/noaccount");
-    }
-  };
-
-  const handleSignIn = async (e, input) => {
-    e.preventDefault();
-    handleClose(false);
-    history.push("/login");
+    props.handleClose();
   };
 
   return (
     <ContentContainer>
       <div>
         <Div>
-          <BigX onClick={() => handleClose(false)}>X</BigX>
+          <BigX onClick={props.handleClose}>X</BigX>
           <FormTitle>
-            Would you like to filter by "Information Insights" or "Business
-            Insights" categories?
+            Calendar can only be used with "Data Series" category selections of
+            "Business Insights" or "Information Insights"{" "}
           </FormTitle>
-          <DownloadText>
-            Click <BigContinue>Continue</BigContinue> if you'd like to upgrade
-            your account to premium.
-          </DownloadText>
+
           <LoginButton type="submit" onClick={handleSubmit}>
-            Continue
-          </LoginButton>
-          <h1>Already have an account.</h1>
-          <LoginButton type="submit" onClick={handleSignIn}>
-            Sign in
+            Back to Data.
           </LoginButton>
         </Div>
       </div>
@@ -106,4 +86,4 @@ function SeriesFilterModal({ handleClose }) {
   );
 }
 
-export default SeriesFilterModal;
+export default CalendarDemographics;

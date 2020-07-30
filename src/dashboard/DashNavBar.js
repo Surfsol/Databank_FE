@@ -71,6 +71,8 @@ function DashNav() {
             {!SignedIn && <Links to="/noaccount">ACCOUNT</Links>}
             {SignedIn && <Links to="/myaccount">ACCOUNT</Links>}
             <Links to="/data">DATA</Links>
+            <Links to="/about">ABOUT</Links>
+            <Links to="/contact">CONTACT</Links>
             {!SignedIn && <Links to="/login">LOGIN</Links>}
             {tier === "ADMIN" && <Links to="/tools">ADMIN</Links>}
             {SignedIn && <Links to="/logout">LOGOUT</Links>}

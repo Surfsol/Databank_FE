@@ -16,7 +16,7 @@ const LineGraphButton = props => {
     filterBoxEndDate,
     setChartDataSM
   } = props;
-  console.log("data", data);
+  console.log("selectableTable", filters[0].selectedTable);
 
   const renderLine = () => {
     if (open === "line") {
@@ -76,7 +76,7 @@ const LineGraphButton = props => {
     }
   };
 
-  if (filters[0]["selectedCategory"] === "Final Destination Country") {
+  if (filters[0]["selectedCategory"] === "Traders' Destination Country") {
     return (
       <>
         {renderLine()}
@@ -85,8 +85,7 @@ const LineGraphButton = props => {
       </>
     );
   } else if (
-    filters[0]["selectedCategory"] ===
-    "Requested Procedures for Destination (Imports to:)"
+    filters[0]["selectedCategory"] === "Requsted Procedures, by Destination"
   ) {
     return (
       <>
@@ -98,16 +97,15 @@ const LineGraphButton = props => {
   } else if (
     open === "choropleth" &&
     filters[0]["selectedCategory"] !== "Country of Residence" &&
-    filters[0]["selectedCategory"] !== "Final Destination Country" &&
-    filters[0]["selectedCategory"] !==
-      "Requested Procedures for Destination (Imports to:)"
+    filters[0]["selectedCategory"] !== "Traders' Destination Country" &&
+    filters[0]["selectedCategory"] !== "Requsted Procedures, by Destination"
   ) {
     setOpen("bar");
     return <>{renderBar()}</>;
   } else if (open === "line" && data.tradersUsers) {
     setOpen("bar");
     return <>{renderBar()}</>;
-  } else if (data.sessionsData) {
+  } else if (filters[0].selectedTable === "Sessions") {
     return (
       <>
         {renderBar()}
@@ -115,6 +113,7 @@ const LineGraphButton = props => {
       </>
     );
   } else if (
+    data &&
     data.tradersUsers &&
     filters[0]["selectedCategory"] === "Country of Residence"
   ) {

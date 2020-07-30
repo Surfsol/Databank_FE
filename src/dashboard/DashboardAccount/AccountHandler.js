@@ -6,6 +6,7 @@ import DashAccountUser from "./DashAccountUser";
 import DashAccountAdmin from "./DashAccountAdmin";
 import GovAccount from "./GovAccount";
 import NewSubscriberHandler from "./NewSubscriberHandler";
+import NoAccount from "./NoAccount";
 
 // This component handles the conditionals for the users
 // We can include an else statement if all else fails to throw some error or push them back to login page
@@ -21,7 +22,7 @@ const AccountHandler = () => {
     console.log(newSub, "NEW SUB?");
     sub = newSub;
   }
-
+  let expiredUser = decoded.tier === "EXPIRED";
   let freeUser = decoded.tier === "FREE";
   let paidUser = decoded.tier === "PAID";
   let govUser = decoded.tier === "GOV_ROLE";
@@ -41,6 +42,8 @@ const AccountHandler = () => {
     return <DashAccountAdmin />;
   } else if (govUser) {
     return <GovAccount decoded={decoded} />;
+  } else if (expiredUser) {
+    return <NoAccount decoded={decoded} />;
   } else {
     return <div>There has been a problem fetching account details.</div>;
   }

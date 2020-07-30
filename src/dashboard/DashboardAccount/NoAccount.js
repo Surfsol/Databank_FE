@@ -152,7 +152,7 @@ const NoAccount = props => {
                         <Grid container direction="column">
                           <List className={classes.listed}>
                             {[
-                              `Data Series:  "Key Demographics"`,
+                              `Data Series:  "Demographics"`,
                               "Bar Chart Display",
                               "One filter per category"
                             ].map(value => {
@@ -191,7 +191,7 @@ const NoAccount = props => {
                               className={classes.pos}
                               style={{ marginTop: "2rem", paddingLeft: "7%" }}
                             >
-                              "Key Demographics"
+                              "Demographics"
                             </Grid>
                             <Grid item className={classes.pos}>
                               <li>Bar Chart Display</li>

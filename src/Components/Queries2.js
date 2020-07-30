@@ -23,18 +23,14 @@ const GetData = (props, { makeValues }) => {
   let QUERY;
   let thisQuery;
   let filters;
-  let setFilters;
+  let setFilters = props.setFilters;
   let filterBoxStartDate;
   let filterBoxEndDate;
 
   if (queriesFilters.filters) {
     filters = queriesFilters.filters;
-    setFilters = queriesFilters.setFilters;
-    // filterBoxStartDate = queriesFilters.filterBoxStartDate;
-    // filterBoxEndDate = queriesFilters.filterBoxStartDate;
   } else if (filters === undefined) {
     filters = props.filters;
-    setFilters = props.setFilters;
     filterBoxStartDate = props.filterBoxStartDate;
     filterBoxEndDate = props.filterBoxStartDate;
     queriesFilters.filters = filters;
@@ -56,6 +52,7 @@ const GetData = (props, { makeValues }) => {
       );
     }
   };
+
   const firstThreeFilters = filterIds => {
     return (
       filterIds.length === 3 &&
@@ -143,6 +140,7 @@ const GetData = (props, { makeValues }) => {
   useEffect(() => {
     setNoDataModal(true);
   });
+
   function noData() {
     if (noDataModal) {
       return (
@@ -157,7 +155,7 @@ const GetData = (props, { makeValues }) => {
               timeout: 500
             }}
           >
-            <Fade in={noDataModal}>
+            <Fade>
               <NoDataModal
                 setNoDataModal={setNoDataModal}
                 filters={filters}
@@ -179,11 +177,13 @@ const GetData = (props, { makeValues }) => {
   ) {
     return noData();
   }
-
+  // quick fix, data.tradersUsers.length <= 5, could remove non-null first
+  // search - Border Crossing Freq, >60, kinyarwanda
+  // search returns 1 user, with 1 null value
   if (
     data &&
     data.tradersUsers !== undefined &&
-    data.tradersUsers.length === 0
+    data.tradersUsers.length <= 5
   ) {
     return noData();
   }
@@ -216,7 +216,7 @@ const GetData = (props, { makeValues }) => {
       </div>
     );
   }
-  console.log("data", data, "filters", filters, "queryType", queryType);
+
   return (
     <>
       <LineGraphButton

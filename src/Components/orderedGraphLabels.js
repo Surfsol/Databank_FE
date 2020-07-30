@@ -1,38 +1,35 @@
 const ordered = [
-  "KEY DEMOGRAPHICS",
+  "DEMOGRAPHICS",
   "Age",
   "Border Crossing Frequency",
-  "Crossing Location",
+  "Border Location",
   "Country of Residence",
   "Education Level",
   "Gender",
-  "Language",
-  "Primary Income",
-  "Produce",
-  "INFORMATION DEMAND",
-  "Most Requested Agency Information for Procedures",
-  "Most Requested Document Information for Procedures",
-  "Most Requested Procedure Commodities",
-  "Most Requested Procedure Commodity Categories",
-  "Requested Procedures for Destination (Imports to:)",
-  "BUSINESS BEHAVIOUR",
-  "Exchange Rate Direction",
-  "Final Destination Country",
-  "Final Destination Market",
-  "Origin of Traders' Goods",
-  "Top Commodities",
-  "Top Commodity Categories"
+  "Preferred Language",
+  "Cross Border Trade as Primary Income",
+  "Grow/Produce their Own Goods",
+  "BUSINESS INSIGHTS",
+  "Currency Exchanges",
+  "Traders' Destination Country",
+  "Traders' Destination Market",
+  "Traded Commodities' Origin",
+  "Traded Commodities",
+  "Traded Commodity Categories",
+  "INFORMATION INSIGHTS",
+  "Requested Agencies",
+  "Requested Documents",
+  "Requested Procedures, by Commodity",
+  "Requested Procedures, by Commodity Category",
+  "Requested Procedures, by Destination"
 ];
-const demographics = [
+const allowed = [
   "Age",
-  "Border Crossing Frequency",
-  "Crossing Location",
   "Country of Residence",
   "Education Level",
-  "Gender",
-  "Language",
-  "Primary Income",
-  "Produce"
+  "Requested Agencies",
+  "Requsted Procedures, by Destination",
+  "Traded Commodity Categories"
 ];
 
-export { ordered, demographics };
+export { ordered, allowed };

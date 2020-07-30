@@ -3,7 +3,7 @@ import graphLabels from "../graphLabels";
 import "../../Components/scss/dataSeries.scss";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import { ordered, demographics } from "../orderedGraphLabels";
+import { ordered, allowed } from "../orderedGraphLabels";
 import SeriesFilterModal from "./SeriesFilterModal";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -11,6 +11,7 @@ import Fade from "@material-ui/core/Fade";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import { Box } from "@material-ui/core";
+import NoAccessModal from "./NoAccessModal";
 
 const DataSFilter = ({
   filters,
@@ -19,31 +20,18 @@ const DataSFilter = ({
   setUpdateUrlFlag,
   FilterBoxOptions,
   updateUrlFlag,
-  tier
+  tier,
+  access
 }) => {
   const [displayDrop, setDisplayDrop] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [access, setAccess] = useState(false);
-
-  useEffect(() => {
-    if (
-      tier !== undefined &&
-      (tier === "ADMIN" || tier === "PAID" || tier === "GOV_ROLE")
-    ) {
-      setAccess(true);
-    }
-  }, [tier]);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [noAccess, setNoAccess] = useState(false);
 
   // let allSelectableOptions = Object.keys(FilterBoxOptions.default);
   const classes = useStyles();
 
   function changeOption(e) {
     const selectedName = e.target.dataset.selectvalue;
-    if (access) {
+    if (access === "paid") {
       setUpdateUrlFlag(!updateUrlFlag);
       let optionFlags = {};
       graphLabels[
@@ -67,7 +55,7 @@ const DataSFilter = ({
           selectableOptions: { ...optionFlags }
         }
       });
-    } else if (!access && demographics.includes(selectedName)) {
+    } else if (access === "free" && allowed.includes(selectedName)) {
       setUpdateUrlFlag(!updateUrlFlag);
       let optionFlags = {};
       graphLabels[
@@ -92,12 +80,12 @@ const DataSFilter = ({
         }
       });
     } else {
-      setOpen(true);
+      setNoAccess(true);
     }
   }
 
   const displayDropOptions = () => {
-    if (displayDrop === true && open === false) {
+    if (displayDrop === true && noAccess === false) {
       return (
         <>
           <Grid item xs={12} className={classes.filterButton}>
@@ -111,12 +99,12 @@ const DataSFilter = ({
           <Grid container xs={12} className={classes.optionsContainer}>
             {ordered.map(e => {
               if (
-                e === "KEY DEMOGRAPHICS" ||
-                e === "INFORMATION DEMAND" ||
-                e === "BUSINESS BEHAVIOUR"
+                e === "DEMOGRAPHICS" ||
+                e === "INFORMATION INSIGHTS" ||
+                e === "BUSINESS INSIGHTS"
               ) {
                 return <p className={classes.super}>{e}</p>;
-              } else if (demographics.includes(e)) {
+              } else if (allowed.includes(e)) {
                 return (
                   <span
                     className={"selectable"}
@@ -129,7 +117,7 @@ const DataSFilter = ({
               } else {
                 return (
                   <span
-                    className={access ? "selectable" : "limited"}
+                    className={access === "paid" ? "selectable" : "limited"}
                     data-selectvalue={e}
                     onClick={changeOption}
                   >
@@ -141,7 +129,7 @@ const DataSFilter = ({
           </Grid>
         </>
       );
-    } else if (displayDrop === false && open === false) {
+    } else if (displayDrop === false && noAccess === false) {
       return (
         <Grid item xs={12} className={classes.filterButton}>
           <Box display="flex" height="100%" alignItems="center">
@@ -161,48 +149,15 @@ const DataSFilter = ({
           <Grid item xs={12} className={classes.filterButton}>
             <Box display="flex" height="100%" alignItems="center">
               <div className={classes.filterText}>
-                <span className={classes.filterName}> Data Series</span>
+                <span className={classes.filterName}> Data Series</span> -{" "}
+                <span className={classes.chosen}>
+                  {filters[0].selectedCategory}
+                </span>
               </div>
               <ExpandMoreIcon className={classes.filterArrow}></ExpandMoreIcon>
             </Box>
           </Grid>
-          <Grid container xs={12} style={{ flexDirection: "column" }}>
-            {ordered.map(e => {
-              if (
-                e === "KEY DEMOGRAPHICS" ||
-                e === "INFORMATION DEMAND" ||
-                e === "BUSINESS BEHAVIOUR"
-              ) {
-                return <p className={classes.super}>{e}</p>;
-              } else {
-                return (
-                  <span
-                    className={access ? "selectable" : "limited"}
-                    data-selectvalue={e}
-                    onClick={changeOption}
-                  >
-                    {e}
-                  </span>
-                );
-              }
-            })}
-          </Grid>
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            className={classes.modal}
-            open={open}
-            onClose={handleClose}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 500
-            }}
-          >
-            <Fade in={open}>
-              <SeriesFilterModal handleClose={handleClose} />
-            </Fade>
-          </Modal>
+          <NoAccessModal noAccess={noAccess} setNoAccess={setNoAccess} />
         </>
       );
     }

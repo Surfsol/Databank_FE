@@ -1,10 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import CalendarModal from "./CalendarModal";
+import CalendarDemographics from "./CalendarDemographics";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { useSelector } from "react-redux";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
 
 const CalendarParent = ({
   newSub,
@@ -19,19 +23,35 @@ const CalendarParent = ({
   open
 }) => {
   const classes = useStyles();
-  const tier = useSelector(state => state.tierReducer.tier.tier);
+  const access = useSelector(state => state.tierReducer.access);
+  const filters = useSelector(
+    state => state.queriesReducer.queriesFilters.filters
+  );
+  console.log(filters[0].selectedTable);
 
-  if (open === "bar") {
+  const [openDemo, setOpenDemo] = React.useState(true);
+
+  // const handleOpen = () => {
+  //   setOpenDemo(true);
+  // };
+
+  const handleClose = () => {
+    setOpenDemo(false);
+  };
+
+  function Demographics() {
+    if (filters[0].selectedTable === "Users") {
+      return <CalendarDemographics handleClose={handleClose} />;
+    }
+  }
+
+  if (open === "bar" && filters[0].selectedTable != "Users") {
     return (
       <>
-        {tier === "ADMIN" ||
-        tier === "PAID" ||
-        tier === "GOV_ROLE" ||
-        newSub ? (
+        {access === "paid" || newSub ? (
           <Grid container>
             <Grid container>
               <Grid item xs={6} style={{ fontSize: "12px" }}>
-                {/* <form className={classes.container} noValidate> */}
                 <TextField
                   id="date"
                   label="Start"
@@ -101,7 +121,24 @@ const CalendarParent = ({
       </>
     );
   } else {
-    return <></>;
+    return (
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openDemo}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500
+        }}
+      >
+        <Fade in={openDemo}>
+          <CalendarDemographics handleClose={handleClose} />
+        </Fade>
+      </Modal>
+    );
   }
 };
 export default CalendarParent;

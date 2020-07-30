@@ -53,7 +53,7 @@ Using [React](https://reactjs.org/), [react-dropdown library](https://www.npmjs.
 
 ### Key Features
 
-A researcher interested in the Sauti Databank is able to see the following Key Demographic Data across all traders by selecting through a dropdown menu:
+A researcher interested in the Sauti Databank is able to see the following Demographic Data across all traders by selecting through a dropdown menu:
 
 - Primary Language
 - Country of Residence

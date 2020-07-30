@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import GraphContainer from "../GraphContainer";
@@ -8,6 +8,11 @@ import GraphContainer from "../GraphContainer";
 import { FilterBoxOptions } from "../Components/FilterBoxOptions";
 //import { flavourOptions } from "../Components/docs/data";
 import graphLabels from "../Components/graphLabels";
+import { useSelector, useDispatch } from "react-redux";
+import { queriesFilters } from "../Components/redux-actions/queriesAction";
+import { allowed } from "../Components/orderedGraphLabels";
+import { decodeToken, getToken } from "../dashboard/auth/Auth";
+import { tierDefined } from "../Components/redux-actions/tierAction";
 
 //set inital filters
 const filterTemplate = {
@@ -39,13 +44,24 @@ const filterTemplate = {
 };
 
 function DashHome() {
-  // const signedIn = getToken();
-  //const token = getToken();
-  // let userEmail;
-  // if (token) {
-  //   userEmail = decodeToken(token);
-  //   userEmail = userEmail.email;
-  // }
+  const token = getToken();
+  let tier;
+  if (token) {
+    tier = decodeToken(token);
+    tier = tier.tier;
+  }
+  let access;
+  if (
+    tier !== undefined &&
+    (tier === "ADMIN" || tier === "PAID" || tier === "GOV_ROLE")
+  ) {
+    access = "paid";
+  } else if (tier !== undefined && tier === "FREE") {
+    access = "free";
+  }
+
+  const dispatch = useDispatch();
+  dispatch(tierDefined({ tier: tier, access: access }));
 
   const history = useHistory();
 
@@ -63,6 +79,7 @@ function DashHome() {
 
   //if nothing in history, set inital filters to Gender
   const setupFilter = history => {
+    console.log("run setupFilter history", history);
     if (history.location.search.length === 0) {
       let defaultFilter = {};
       Object.keys(filterTemplate).forEach(filterId => {
@@ -157,14 +174,80 @@ function DashHome() {
       return newFilterObject;
     }
   };
-  return (
-    <>
-      {/* <SignedInDiv>
-        <UserHeader></UserHeader>
-      </SignedInDiv> */}
-      <GraphContainer filters={setupFilter(history)} />
-    </>
-  );
+
+  let defaultFilters = {
+    0: {
+      nameOfFilter: "Data Series",
+      selectedCategory: "Country of Residence",
+      selectableOptions: {},
+      selectedTable: "Users",
+      selectedTableColumnName: "country_of_residence",
+      showOptions: false
+    },
+
+    1: {
+      nameOfFilter: "Compare SubSamples",
+      selectedCategory: "",
+      selectableOptions: {},
+      selectedTable: "",
+      selectedTableColumnName: "",
+      showOptions: false
+    },
+    2: {
+      nameOfFilter: "Data Filter",
+      selectedCategory: "",
+      selectableOptions: {},
+      selectedTable: "",
+      selectedTableColumnName: "",
+      showOptions: true
+    }
+  };
+
+  console.log("tier", tier, "setup his", setupFilter(history));
+  if (
+    tier != "ADMIN" &&
+    tier != "PAID" &&
+    tier != "GOV_ROLE" &&
+    tier != "FREE"
+  ) {
+    dispatch(
+      queriesFilters({
+        filters: defaultFilters
+      })
+    );
+    return <GraphContainer filters={defaultFilters} />;
+  } else if (tier === "FREE") {
+    for (let j in setupFilter(history)) {
+      console.log(Object.values(setupFilter(history)[j]));
+      let cat = Object.values(setupFilter(history)[j])[1];
+      console.log(cat);
+      if (!allowed.includes(cat)) {
+        console.log("not allowed");
+        dispatch(
+          queriesFilters({
+            filters: defaultFilters
+          })
+        );
+        return (
+          <>
+            <GraphContainer filters={defaultFilters} />
+          </>
+        );
+      } else {
+        return (
+          <>
+            <GraphContainer filters={setupFilter(history)} />
+          </>
+        );
+      }
+    }
+  } else {
+    return (
+      <>
+        <GraphContainer filters={setupFilter(history)} />
+      </>
+    );
+  }
 }
 
 export default DashHome;

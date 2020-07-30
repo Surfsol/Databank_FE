@@ -28,7 +28,11 @@ const CalendarFilter = () => {
   } = reducerCal;
   if (open === "bar" && openCal === false) {
     return (
-      <Grid item className={classes.calendar} onClick={() => setOpenCal(true)}>
+      <Grid
+        item
+        className={classes.doNotRender}
+        onClick={() => setOpenCal(true)}
+      >
         <Box display="flex" height="100%" alignItems="center">
           <div className={classes.filterText}>
             <span className={classes.filterName}>Date Range</span>
@@ -107,5 +111,15 @@ const useStyles = makeStyles(theme => ({
   },
   filterText: {
     width: "100%"
+  },
+  doNotRender: {
+    padding: theme.spacing(0),
+    height: "50px",
+    padding: "1%",
+    fontFamily: "Roboto",
+    borderBottom: "1px rgba(0, 0, 0, 0.1) solid",
+    fontSize: "1.5rem",
+    cursor: "pointer",
+    background: "#CCCCCC"
   }
 }));

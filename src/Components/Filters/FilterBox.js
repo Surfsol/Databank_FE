@@ -51,7 +51,7 @@ export default function FilterBox(props) {
   const [updateUrlFlag, setUpdateUrlFlag] = useState(false);
   const [displayDrop, setDisplayDrop] = useState([]);
 
-  //theSuperCategories (Key Demographic, Information Demand, Business Behavior)
+  //theSuperCategories (Demographic, Information Insights, Business Insights)
   //categoriesCollected (categories selected ex. 'gender')
   const xVar = (theSuperCategories, categoriesCollected) => {
     return theSuperCategories.map(superCategory => {
@@ -93,7 +93,17 @@ export default function FilterBox(props) {
       tier = decodeToken(token);
       tier = tier.tier;
     }
-    dispatch(tierDefined({ tier: tier }));
+    let access;
+    if (
+      tier !== undefined &&
+      (tier === "ADMIN" || tier === "PAID" || tier === "GOV_ROLE")
+    ) {
+      access = "paid";
+    } else if (tier !== undefined && tier === "FREE") {
+      access = "free";
+    }
+    //console.log("tier", tier, "access", access);
+    dispatch(tierDefined({ tier: tier, access: access }));
 
     useEffect(() => {
       if (filterSelectorName === "Compare SubSamples") {
@@ -122,6 +132,7 @@ export default function FilterBox(props) {
         <Grid container>
           <DataSFilter
             tier={tier}
+            access={access}
             newSub={newSub}
             filterSelectorName={filterSelectorName}
             filters={filters}
@@ -140,6 +151,7 @@ export default function FilterBox(props) {
           <AddFilter
             filterSelectorName={filterSelectorName}
             filters={filters}
+            access={access}
             setFilters={setFilters}
             index={index}
             setUpdateUrlFlag={setUpdateUrlFlag}
@@ -155,10 +167,8 @@ export default function FilterBox(props) {
       return <></>;
     }
   };
-  const [access, setAccess] = useState(false);
 
-  const tier = useSelector(state => state.tierReducer.tier.tier);
-
+  const access = useSelector(state => state.tierReducer.access);
   const newSub = getSubscription();
   let sub;
   if (newSub) {
@@ -204,29 +214,10 @@ export default function FilterBox(props) {
     History.push("?" + filterStrings); //new URLSearchParams({ ...urlSearchParams }).toString());
   }, [updateUrlFlag]);
 
-  // const handleSubmit = useCallback(
-  //   e => {
-  //     if (e.target.textContent === "Submit") {
-  //       e.preventDefault();
-  //     }
-
-  //     setFilterBoxStartDate(filterBoxStartDate);
-  //     setFilterBoxEndDate(filterBoxEndDate);
-  //   },
-  //   [
-  //     filterBoxEndDate,
-
-  //     filterBoxStartDate,
-  //     setFilterBoxStartDate,
-  //     setFilterBoxEndDate
-  //   ]
-  // );
-
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(
       calendarAction({
-        access,
         filterBoxStartDate: filterBoxStartDate,
         setFilterBoxStartDate: setFilterBoxStartDate,
         filterBoxEndDate: filterBoxEndDate,
@@ -263,10 +254,7 @@ export default function FilterBox(props) {
 
   function filterAdd() {
     const currentDataFilter = Object.keys(filters).length - 1;
-    if (
-      tier !== undefined &&
-      (tier === "ADMIN" || tier === "PAID" || tier === "GOV_ROLE")
-    ) {
+    if (access === "paid") {
       setFilters({
         ...filters,
         // make a flag that is only true when this button is clicked on

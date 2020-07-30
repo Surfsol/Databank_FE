@@ -9,6 +9,9 @@ import { ordered } from "../orderedGraphLabels";
 import { Box } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import NoAccessModal from "./NoAccessModal";
+import { separateOperations } from "graphql";
+import { allowed } from "../orderedGraphLabels";
 
 const CompareSubSamples = () => {
   const reducerSub = useSelector(
@@ -31,96 +34,134 @@ const CompareSubSamples = () => {
   } = reducerSub;
   const classes = useStyles();
 
+  const access = useSelector(state => state.tierReducer.access);
+  const [noAccess, setNoAccess] = useState(false);
+
   function changeOption(e) {
     const selectedName = e.target.dataset.selectvalue;
-    setUpdateUrlFlag(!updateUrlFlag);
-    let optionFlags = {};
-    graphLabels[
-      `${FilterBoxOptions.default[selectedName].value.type}`
-    ].labels.forEach(option => {
-      optionFlags = {
-        ...optionFlags,
-        [option]: false
-      };
-    });
-    setFilters({
-      ...filters,
-      [index]: {
-        ...filters[index],
-        selectedCategory: selectedName, //option
-        selectedTableColumnName:
-          FilterBoxOptions.default[selectedName].value.type,
+    if (
+      access === "paid" ||
+      (access === "free" && allowed.includes(selectedName))
+    ) {
+      setUpdateUrlFlag(!updateUrlFlag);
+      let optionFlags = {};
+      graphLabels[
+        `${FilterBoxOptions.default[selectedName].value.type}`
+      ].labels.forEach(option => {
+        optionFlags = {
+          ...optionFlags,
+          [option]: false
+        };
+      });
+      setFilters({
+        ...filters,
+        [index]: {
+          ...filters[index],
+          selectedCategory: selectedName, //option
+          selectedTableColumnName:
+            FilterBoxOptions.default[selectedName].value.type,
 
-        selectedTable: FilterBoxOptions.default[selectedName].value.query,
-        selectedOption: undefined,
-        selectableOptions: { ...optionFlags }
-      }
-    });
+          selectedTable: FilterBoxOptions.default[selectedName].value.query,
+          selectedOption: undefined,
+          selectableOptions: { ...optionFlags }
+        }
+      });
+    } else {
+      setNoAccess(true);
+    }
   }
 
   const [displayDrop, setDisplayDrop] = useState(false);
 
-  if (filterSelectorName === "Compare SubSamples" && open === "bar") {
-    let allSelectableOptions = Object.keys(FilterBoxOptions.default);
+  function compareOpen() {
+    return (
+      <>
+        <Grid item xs={12} className={classes.filterButton}>
+          <Box display="flex" height="100%" alignItems="center">
+            <div className={classes.filterText}>
+              <span className={classes.filterName}> Compare Data</span>
+            </div>
+            <ExpandLessIcon className={classes.filterArrow}></ExpandLessIcon>
+          </Box>
+        </Grid>
+        <Grid container xs={12} className={classes.optionsContainer}>
+          {ordered.map(e => {
+            if (
+              e === "DEMOGRAPHICS" ||
+              e === "INFORMATION INSIGHTS" ||
+              e === "BUSINESS INSIGHTS"
+            ) {
+              return <p className={classes.super}>{e}</p>;
+            } else if (allowed.includes(e)) {
+              return (
+                <span
+                  className="selectable"
+                  data-selectvalue={e}
+                  onClick={changeOption}
+                >
+                  {e}
+                </span>
+              );
+            } else {
+              return (
+                <span
+                  className={access === "paid" ? "selectable" : "limited"}
+                  data-selectvalue={e}
+                  onClick={changeOption}
+                >
+                  {" "}
+                  {e}
+                </span>
+              );
+            }
+          })}
+        </Grid>
+      </>
+    );
+  }
 
-    const displayDropOptions = () => {
-      if (displayDrop === true) {
-        return (
-          <>
-            <Grid item xs={12} className={classes.filterButton}>
-              <Box display="flex" height="100%" alignItems="center">
-                <div className={classes.filterText}>
-                  <span className={classes.filterName}> Compare Data</span>
-                </div>
-                <ExpandLessIcon
-                  className={classes.filterArrow}
-                ></ExpandLessIcon>
-              </Box>
-            </Grid>
-            <Grid container xs={12} className={classes.optionsContainer}>
-              {ordered.map(e => {
-                if (
-                  e === "KEY DEMOGRAPHICS" ||
-                  e === "INFORMATION DEMAND" ||
-                  e === "BUSINESS BEHAVIOUR"
-                ) {
-                  return <p className={classes.super}>{e}</p>;
-                } else {
-                  return (
-                    <span
-                      className="selectable"
-                      data-selectvalue={e}
-                      onClick={changeOption}
-                    >
-                      {e}
-                    </span>
-                  );
-                }
-              })}
-            </Grid>
-          </>
-        );
-      } else {
-        return (
-          <>
-            <Grid item xs={12} className={classes.filterButton}>
-              <Box display="flex" height="100%" alignItems="center">
-                <div className={classes.filterText}>
-                  <span className={classes.filterName}> Compare Data</span> -
-                  <span className={classes.chosen}>
-                    {" "}
-                    {filters[1].selectedCategory}
-                  </span>
-                </div>
-                <ExpandMoreIcon
-                  className={classes.filterArrow}
-                ></ExpandMoreIcon>
-              </Box>
-            </Grid>
-          </>
-        );
-      }
-    };
+  const displayDropOptions = () => {
+    if (displayDrop === true && noAccess === false) {
+      return <>{compareOpen()}</>;
+    } else if (noAccess === false) {
+      return (
+        <>
+          <Grid item xs={12} className={classes.filterButton}>
+            <Box display="flex" height="100%" alignItems="center">
+              <div className={classes.filterText}>
+                <span className={classes.filterName}> Compare Data</span>
+                <span
+                  className={
+                    filters[index].selectedCategory
+                      ? classes.dash
+                      : classes.hideDash
+                  }
+                >
+                  {" "}
+                  -{" "}
+                </span>
+                <span className={classes.chosen}>
+                  {" "}
+                  {filters[1].selectedCategory}
+                </span>
+              </div>
+              <ExpandMoreIcon className={classes.filterArrow}></ExpandMoreIcon>
+            </Box>
+          </Grid>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {compareOpen()}
+          <NoAccessModal noAccess={noAccess} setNoAccess={setNoAccess} />
+        </>
+      );
+    }
+  };
+
+  if (filterSelectorName === "Compare SubSamples" && open === "bar") {
+    //let allSelectableOptions = Object.keys(FilterBoxOptions.default);
     return (
       <Grid container onClick={() => setDisplayDrop(!displayDrop)}>
         {displayDropOptions()}
@@ -130,6 +171,7 @@ const CompareSubSamples = () => {
     return <></>;
   }
 };
+
 export default CompareSubSamples;
 
 const useStyles = makeStyles(theme => ({
@@ -187,5 +229,8 @@ const useStyles = makeStyles(theme => ({
     color: "#8c8c8c",
     fontSize: "1.4rem",
     padding: "1rem 0.5rem"
+  },
+  hideDash: {
+    visibility: "hidden"
   }
 }));
