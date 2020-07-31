@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { barDownload } from "../Components/redux-actions/barDownloadAction";
 import Grid from "@material-ui/core/Grid";
 import dynamicText from "./dynamicText";
+import { makeStyles } from "@material-ui/core/styles";
 
 const Graph = props => {
   let {
@@ -24,7 +25,7 @@ const Graph = props => {
     setChartDataSM,
     chartData
   } = props;
-
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   let dyText = "";
@@ -276,11 +277,9 @@ const Graph = props => {
           motionStiffness={90}
           motionDamping={15}
         />
-        <Grid item style={{ margin: "auto" }}>
-          <div>
-            <h2>Method Notes</h2>
-            <div dangerouslySetInnerHTML={{ __html: dyText }}></div>
-          </div>
+        <Grid item style={{ margin: "auto" }} className={classes.dyContainer}>
+          <h2>Method Notes</h2>
+          <div dangerouslySetInnerHTML={{ __html: dyText }}></div>
         </Grid>
       </Grid>
     </>
@@ -289,93 +288,13 @@ const Graph = props => {
 
 export default Graph;
 
-const DownloadText = styled.p`
-  font-size: 1.6rem;
-  opacity: 0.8;
-  width: 100px;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 0;
-  background-color: slategrey;
-  color: white;
-  font-weight: 500;
-  text-align: center;
-  margin: 0 10px;
-  &:hover {
-    background-color: slategrey;
-    cursor: pointer;
-    opacity: 1;
+const useStyles = makeStyles(theme => ({
+  dyContainer: {
+    width: "100%",
+    padding: "0em 2em",
+    fontSize: "1.5em",
+    "& h2": {
+      fontWeight: 600
+    }
   }
-`;
-const FilterHideButton = styled.button`
-  padding: 8px 5px;
-  background: #eb5e52;
-  font-weight: 400;
-  color: white;
-  border-radius: 5px;
-  font-size: 1.4rem;
-  width: 95px;
-  opacity: 0.75;
-  border: none;
-  &: hover {
-    cursor: pointer;
-    opacity: 1;
-  }
-`;
-const SocialMediaContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  border: 0.5px solid lightgrey;
-  padding: 5px;
-  margin-bottom: 5px;
-  font-size: 1.6rem;
-`;
-const SocialMediaIconsTwitter = styled.a`
-  font-size: 2.5rem;
-  margin: 0 10px;
-  color: rgb(0, 172, 238);
-  opacity: 0.75;
-  &:hover {
-    opacity: 1;
-  }
-`;
-const SocialMediaIconsFacebook = styled.a`
-  font-size: 2.5rem;
-  margin: 0 10px;
-  color: rgb(59, 89, 152);
-  opacity: 0.75;
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const CopyUrlButton = styled.button`
-  padding: 8px 5px;
-  background: #47837f;
-  font-weight: 400;
-  color: white;
-  border-radius: 5px;
-  font-size: 1.4rem;
-  width: 95px;
-  opacity: 0.75;
-  border: none;
-  margin: 0 10px;
-  &: hover {
-    cursor: pointer;
-    opacity: 1;
-  }
-`;
-const ContentContainerDiv = styled.div`
-  border-right: 1px solid lightgrey;
-  margin-right: 2px;
-`;
-const IconContainer = styled.span`
-  display: flex;
-  font-size: 1.8rem;
-  align-items: center;
-`;
-const ShareDiv = styled.div`
-  margin-right: 5px;
-`;
+}));
