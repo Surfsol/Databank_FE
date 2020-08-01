@@ -297,7 +297,10 @@ const useStyles = makeStyles(theme => ({
     color: "#8c8c8c"
   },
   filterText: {
-    width: "100%"
+    width: "100%",
+    "&:hover": {
+      color: "#9F1C0F"
+    }
   },
   dash: {},
   hideDash: {

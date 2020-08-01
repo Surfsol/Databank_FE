@@ -366,7 +366,10 @@ const useStyles = makeStyles(theme => ({
     padding: "1%",
     color: "#8c8c8c",
     fontFamily: "Roboto",
-    fontSize: "1.5rem"
+    fontSize: "1.5rem",
+    "&:hover": {
+      color: "#9F1C0F"
+    }
   },
   filterArrow: {
     float: "right",
